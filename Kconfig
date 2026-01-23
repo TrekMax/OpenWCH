@@ -1,0 +1,23 @@
+mainmenu "OpenWCH SDK Configuration"
+
+menu "Build artifacts"
+
+config OPENWCH_GEN_HEX
+    bool "Generate .hex output"
+    default y
+
+config OPENWCH_GEN_BIN
+    bool "Generate .bin output"
+    default y
+
+config OPENWCH_GEN_MAP
+    bool "Generate .map output"
+    default y
+
+config OPENWCH_GEN_DEBUG_FILES
+    bool "Generate debug files (.lst/.relf/.symb)"
+    default y
+
+endmenu
+
+source "components/Kconfig"

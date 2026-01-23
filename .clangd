@@ -1,0 +1,63 @@
+CompileFlags:
+  Add:
+    # 基础编译器标志
+    - -target
+    - riscv32-wch-none-elf
+    - -march=rv32imafdc
+    - -mabi=ilp32d
+    - -mcmodel=medlow
+    - -ffunction-sections
+    - -fdata-sections
+    - -fno-common
+    - -fno-builtin-printf
+    - -fno-builtin-puts
+    - -fno-omit-frame-pointer
+    - -fno-optimize-sibling-calls
+    - -MMD
+    - -Wall
+    - -Wno-comment
+    - -Wno-int-conversion
+    - -Wno-implicit-function-declaration
+    - -g
+    - -O2
+
+  Remove:
+    # 移除可能导致问题的标志
+    - -mno-relax
+    - -mcmodel=*
+    - -march=*
+    - -mabi=*
+    - --target=*
+    - -mtune=*
+
+Index:
+  Background: Build
+  StandardLibrary: No
+
+Diagnostics:
+  # 禁用一些可能导致误报的诊断
+  Suppress:
+    - unused-parameter
+    - missing-prototypes
+    - sign-compare
+    - implicit-fallthrough
+  ClangTidy:
+    Add:
+      - readability-*
+      - performance-*
+      - bugprone-*
+    Remove:
+      - readability-magic-numbers
+      - readability-isolate-declaration
+      - readability-function-cognitive-complexity
+
+Completion:
+  AllScopes: Yes
+
+Hover:
+  ShowAKA: Yes
+
+InlayHints:
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes

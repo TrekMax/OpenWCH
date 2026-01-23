@@ -1,0 +1,47 @@
+# Kconfig import and header generation helper
+# Converts .config key/values to CMake variables and a C header.
+
+function(openwch_kconfig_import CONFIG_PATH OUT_HEADER)
+    if(EXISTS "${CONFIG_PATH}")
+        file(STRINGS "${CONFIG_PATH}" _cfg_lines REGEX "^CONFIG_")
+        message(STATUS "Using Kconfig selections from ${CONFIG_PATH}")
+    else()
+        message(FATAL_ERROR "Kconfig file not found: ${CONFIG_PATH}")
+    endif()
+
+    set(_defines)
+    foreach(line IN LISTS _cfg_lines)
+        if(line MATCHES "^CONFIG_([A-Za-z0-9_]+)=(.*)$")
+            set(name "${CMAKE_MATCH_1}")
+            set(val  "${CMAKE_MATCH_2}")
+            string(STRIP "${val}" val)
+        if(val STREQUAL "y")
+            list(APPEND _defines "CONFIG_${name}=1")
+            set(CONFIG_${name} ON PARENT_SCOPE)
+            set(CONFIG_${name} ON CACHE BOOL "Kconfig: ${name}" FORCE)
+        elseif(val STREQUAL "n")
+            set(CONFIG_${name} OFF PARENT_SCOPE)
+            set(CONFIG_${name} OFF CACHE BOOL "Kconfig: ${name}" FORCE)
+        else()
+            string(REGEX REPLACE "^\"(.*)\"$" "\\1" val "${val}")
+            list(APPEND _defines "CONFIG_${name}=${val}")
+            set(CONFIG_${name} "${val}" PARENT_SCOPE)
+            set(CONFIG_${name} "${val}" CACHE STRING "Kconfig: ${name}" FORCE)
+        endif()
+        endif()
+    endforeach()
+
+    get_filename_component(_hdr_dir "${OUT_HEADER}" DIRECTORY)
+    file(MAKE_DIRECTORY "${_hdr_dir}")
+
+    set(_header "/* Auto-generated from ${CONFIG_PATH}. Do not edit. */\n#pragma once\n\n")
+    foreach(def IN LISTS _defines)
+        string(REGEX REPLACE "^(CONFIG_[A-Za-z0-9_]+)=(.*)$" "#define \\1 \\2" defline "${def}")
+        string(APPEND _header "${defline}\n")
+    endforeach()
+
+    file(WRITE "${OUT_HEADER}" "${_header}")
+
+    set(OPENWCH_CONFIG_DEFINES "${_defines}" PARENT_SCOPE)
+    set(OPENWCH_CONFIG_HEADER "${OUT_HEADER}" PARENT_SCOPE)
+endfunction()

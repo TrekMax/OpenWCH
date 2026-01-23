@@ -1,0 +1,26 @@
+menu "WCH Log"
+
+config WCH_LOG_UART
+    bool "Enable UART log output"
+    default y
+
+config WCH_LOG_RTT
+    bool "Enable RTT log output"
+    default n
+
+config WCH_LOG_CDC
+    bool "Enable USB CDC log output"
+    default n
+
+config WCH_LOG_COLORS
+    bool "Enable ANSI log colors"
+    default y
+
+config WCH_LOG_LEVEL
+    int "Log level"
+    range 0 5
+    default 4
+    help
+      0=None, 1=Error, 2=Warn, 3=Info, 4=Debug, 5=Verbose
+
+endmenu

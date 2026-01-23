@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Default",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "includePath": [
+            ]
+        }
+    ]
+}
