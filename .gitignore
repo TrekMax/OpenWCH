@@ -1,0 +1,8 @@
+.vscode/
+.cache/
+
+build/
+dist/
+node_modules/
+
+.env
