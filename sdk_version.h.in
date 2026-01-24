@@ -31,10 +31,13 @@
 /* 数值版本编码（用于版本比较） */
 #define SDK_VERSION_CODE    @SDK_VERSION_CODE@
 #define SDK_VERSION_NUMBER  @SDK_VERSION_NUMBER@
-#define SDK_VERSION         @SDK_VERSION@
+#define SDKVERSION         @SDKVERSION@
 
 /* 构建版本信息（Git 提交哈希） */
 #define BUILD_VERSION       "@BUILD_VERSION@"
+
+#define _COMPILE_DATE_        "@COMPILE_DATE@"
+#define _COMPILE_TIME_        "@COMPILE_TIME@"
 
 /**
  * @brief 版本比较宏

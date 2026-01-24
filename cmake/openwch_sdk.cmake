@@ -45,6 +45,23 @@ function(_openwch_add_objcopy target format ext)
     )
 endfunction()
 
+function(openwch_generate_version_header out_file)
+    if(NOT OPENWCH_SDK_DIR)
+        message(FATAL_ERROR "OPENWCH_SDK_DIR is not defined")
+    endif()
+    if(NOT out_file)
+        message(FATAL_ERROR "openwch_generate_version_header requires OUT_FILE")
+    endif()
+
+    execute_process(
+        COMMAND ${CMAKE_COMMAND}
+            -DOPENWCH_SDK_DIR=${OPENWCH_SDK_DIR}
+            -DOUT_FILE=${out_file}
+            -P ${OPENWCH_SDK_DIR}/cmake/gen_version_h.cmake
+        WORKING_DIRECTORY ${OPENWCH_SDK_DIR}
+    )
+endfunction()
+
 function(_openwch_project_ensure_setup)
     get_property(_already GLOBAL PROPERTY OPENWCH_PROJECT_SETUP_DONE)
     if(_already)
@@ -65,7 +82,6 @@ function(_openwch_project_ensure_setup)
     endif()
 
     include("${OPENWCH_SDK_DIR}/cmake/kconfig.cmake")
-    include("${OPENWCH_SDK_DIR}/cmake/GenerateVersionHeader.cmake")
 
     if(NOT TARGET openwch_config)
         if(NOT OPENWCH_CONFIG_FILE)
