@@ -11,6 +11,12 @@ if (NOT DEFINED OPENWCH_SDK_PATH)
 endif()
 
 
+function(openwch_add_sources_if config)
+    if(${config})
+        target_sources(openwch_platform INTERFACE ${ARGN})
+    endif()
+endfunction()
+
 # 简介: 为目标生成调试信息，包括反汇编、ELF头、符号表等
 # 参数:
 # + target_name 目标
@@ -113,7 +119,7 @@ function(openwch_add_source target)
     )
 
     target_link_libraries(${target}
-        # openwch_platform
+        openwch_platform
         ${OW_LINK_LIBS}
     )
 

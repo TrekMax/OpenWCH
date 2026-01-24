@@ -23,13 +23,13 @@
 
 #if defined(WCH_LOG_UART)
 #define WCH_LOG_PRINTF printf
-#define WCH_LOG(fmt, ...) WCH_LOG_PRINTF(fmt "\n" WCH_LOG_RESET_COLOR, ##__VA_ARGS__)
+#define WCH_LOG(fmt, ...) WCH_LOG_PRINTF(fmt "\n" LOG_RESET_COLOR, ##__VA_ARGS__)
 #elif defined(WCH_LOG_RTT)
 #define WCH_LOG_PRINTF(fmt, ...) SEGGER_RTT_printf(0, fmt, ##__VA_ARGS__)
-#define WCH_LOG(fmt, ...) SEGGER_RTT_printf(0, fmt "\n" WCH_LOG_RESET_COLOR, ##__VA_ARGS__)
+#define WCH_LOG(fmt, ...) SEGGER_RTT_printf(0, fmt "\n" LOG_RESET_COLOR, ##__VA_ARGS__)
 #elif defined(WCH_LOG_CDC)
 #define WCH_LOG_PRINTF usb_printf
-#define WCH_LOG(fmt, ...) usb_printf(fmt "\n" WCH_LOG_RESET_COLOR, ##__VA_ARGS__)
+#define WCH_LOG(fmt, ...) usb_printf(fmt "\n" LOG_RESET_COLOR, ##__VA_ARGS__)
 
 #else
 #define WCH_LOG_PRINTF
@@ -92,6 +92,7 @@
 void wch_log_hexdump(const char *tag, uint8_t *buf, uint32_t length);
 
 #define WCH_LOG_HEXDUMP(tag, buf, length) wch_log_hexdump(tag, buf, length)
+#define WCH_LOG_HEX_DUMP(tag, buf, length) WCH_LOG_HEXDUMP(tag, buf, length)
 
 
 #endif /* __WCH_LOG_H__ */

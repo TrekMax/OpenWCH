@@ -1,0 +1,25 @@
+menu "RTOS"
+
+config FREERTOS_ENABLE
+    bool "Enable FreeRTOS"
+    default n
+
+if FREERTOS_ENABLE
+config FREERTOS_TICK_RATE_HZ
+    int "FreeRTOS tick rate (Hz)"
+    default 100
+    range 10 1000
+
+config FREERTOS_HEAP_IMPL
+    int "FreeRTOS heap implementation (1..5)"
+    default 4
+    range 1 5
+endif
+
+config RTTHREAD_ENABLE
+    bool "Enable RT-Thread"
+
+config LITEOS_M_ENABLE
+    bool "Enable LiteOS_M"
+
+endmenu
