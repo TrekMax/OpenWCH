@@ -1,7 +1,7 @@
 # CH58x BLE Library
-add_library(ch58x_ble INTERFACE)
+add_library(openwch_ble INTERFACE)
 
-target_include_directories(ch58x_ble INTERFACE
+target_include_directories(openwch_ble INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}
 )
 
@@ -12,7 +12,7 @@ else()
     set(BLE_LIB_PATH "${CMAKE_CURRENT_LIST_DIR}/libCH58xBLE.a")
 endif()
 
-target_link_libraries(ch58x_ble INTERFACE
+target_link_libraries(openwch_ble INTERFACE
     -Wl,--whole-archive
     ${BLE_LIB_PATH}
     -Wl,--no-whole-archive
