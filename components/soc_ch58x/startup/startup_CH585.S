@@ -213,7 +213,7 @@ __highcode_init:
 	
     /* Baremetal defaults to U-mode; FreeRTOS requires M-mode for CSR access. */
 #ifdef CONFIG_FREERTOS_ENABLE
-    li t0, 0x1888
+    li t0, 0x1800
 #else
     li t0, 0x88
 #endif

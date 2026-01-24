@@ -20,5 +20,16 @@ target_include_directories(ble_peripheral PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/app/
     ${CMAKE_CURRENT_SOURCE_DIR}/profile/
-    ${OPENWCH_SDK_PATH}/components/soc_ch58x/libs
 )
+
+if (CONFIG_SOC_CH58X)
+    target_include_directories(ble_peripheral PRIVATE
+        ${OPENWCH_SDK_PATH}/components/soc_ch58x/libble/
+    )
+endif()
+
+if (CONFIG_SOC_CH59X)
+    target_include_directories(ble_peripheral PRIVATE
+        ${OPENWCH_SDK_PATH}/components/soc_ch59x/libble/
+    )
+endif()

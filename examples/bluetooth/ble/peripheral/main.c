@@ -68,7 +68,12 @@ int main(void)
     WCH_LOGI("BLE Peripheral Starting...");
     WCH_LOGI("Library Version: %s", VER_LIB);
 
+#if CONFIG_SOC_CH59X
+    CH59x_BLEInit();
+#endif
+#if CONFIG_SOC_CH58X
     CH58x_BLEInit();
+#endif
     WCH_LOGI("BLE Init OK");
 
     HAL_Init();

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "CH58x_common.h"
+#include <openwch_platform.h>
 #include <stdio.h>
 
 /* See https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html */

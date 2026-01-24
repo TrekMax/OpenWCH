@@ -72,7 +72,10 @@ def do_build(args: argparse.Namespace) -> None:
     if not toolchain.exists():
         raise SystemExit(f"toolchain file not found: {toolchain}")
 
-    prj_conf = example_dir / "prj.conf"
+    if args.config:
+        prj_conf = Path(args.config).expanduser().resolve()
+    else:
+        prj_conf = example_dir / "prj.conf"
     out_config = generate_kconfig(sdk_root, build_dir, prj_conf if prj_conf.exists() else None)
 
     configure_cmd = [
@@ -82,7 +85,7 @@ def do_build(args: argparse.Namespace) -> None:
         "-B",
         str(build_dir),
         f"-DOPENWCH_SDK_DIR={sdk_root}",
-        f"-DCMAKE_BUILD_TYPE={args.config}",
+        f"-DCMAKE_BUILD_TYPE={args.type}",
         f"-DCMAKE_TOOLCHAIN_FILE={toolchain}",
         "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
     ]
@@ -112,7 +115,8 @@ def main(argv: list[str]) -> int:
 
     p_build = sub.add_parser("build", help="configure and build an example")
     p_build.add_argument("-S", "--example", default=".", help="example path (default: cwd)")
-    p_build.add_argument("--config", default="Debug", choices=["Debug", "Release"], help="CMAKE_BUILD_TYPE")
+    p_build.add_argument("--type", default="Debug", choices=["Debug", "Release"], help="CMAKE_BUILD_TYPE")
+    p_build.add_argument("--config", help="path to prj.conf (default: example/prj.conf)")
     p_build.add_argument("--cmake", default="cmake", help="cmake executable")
 
     p_flash = sub.add_parser("flash", help="flash built example to device")

@@ -23,7 +23,13 @@ extern "C" {
  * INCLUDES
  */
 #include <stdint.h>
+#if CONFIG_SOC_CH59X
+#include "CH59xBLE_LIB.h"
+#endif
+
+#if CONFIG_SOC_CH58X
 #include "CH58xBLE_LIB.h"
+#endif
 
 /*********************************************************************
  * CONSTANTS

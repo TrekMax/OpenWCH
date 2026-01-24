@@ -1,0 +1,83 @@
+menu "SoC Configuration"
+
+menu "CH59X SoC drivers"
+
+    config SOC_CH59X_UART
+        bool "Enable CH59X UART driver"
+        default y
+        depends on SOC_CH59X
+
+    config SOC_CH59X_GPIO
+        bool "Enable CH59X GPIO driver"
+        default y
+        depends on SOC_CH59X
+
+    config SOC_CH59X_SPI
+        bool "Enable CH59X SPI driver"
+        default n
+        depends on SOC_CH59X
+
+    config SOC_CH59X_I2C
+        bool "Enable CH59X I2C driver"
+        default n
+        depends on SOC_CH59X
+
+    config SOC_CH59X_TIMER
+        bool "Enable CH59X TIMER driver"
+        default n
+        depends on SOC_CH59X
+
+    config SOC_CH59X_ADC
+        bool "Enable CH59X ADC driver"
+        default n
+        depends on SOC_CH59X
+
+    config SOC_CH59X_WDT
+        bool "Enable CH59X WDT driver"
+        default n
+        depends on SOC_CH59X
+    
+    config SOC_CH59X_PWM
+        bool "Enable CH59X PWM driver"
+        default n
+        depends on SOC_CH59X
+
+    config SOC_CH59X_USB
+        bool "Enable CH59X USB driver"
+        default n
+        depends on SOC_CH59X
+
+rsource "libble/Kconfig"
+
+endmenu
+
+endmenu
+
+menu "Debug Configuration"
+
+choice DEBUG_INTERFACE
+    prompt "Debug Interface"
+    default DEBUG_UART0
+    help
+      Select debug output interface
+
+config DEBUG_NONE
+    bool "No Debug Output"
+
+config DEBUG_UART0
+    bool "UART0 Debug Output"
+
+config DEBUG_UART1
+    bool "UART1 Debug Output"
+
+endchoice
+
+config DEBUG_UART_PORT
+    int
+    default 0 if DEBUG_NONE
+    default 1 if DEBUG_UART0
+    default 2 if DEBUG_UART1
+    help
+      Debug UART port number (0=none, 1=UART0, 2=UART1)
+
+endmenu

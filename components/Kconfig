@@ -7,6 +7,16 @@ config BOARD_CH58X_EVB
     default n
     depends on SOC_CH58X
 
+config SOC_CH59X
+    bool "Target SoC: CH59x"
+    default n
+
+config BOARD_CH59X_EVB
+    bool "Board: CH59x EVB"
+    default n
+    depends on SOC_CH59X
+
 rsource "soc_ch58x/Kconfig"
+rsource "soc_ch59x/Kconfig"
 rsource "wch_log/Kconfig"
 rsource "rtos/Kconfig"

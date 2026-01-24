@@ -1,3 +1,13 @@
+/**
+ * @file main.c
+ * @brief 
+ * @version 0.1
+ * @date 2026-01-23
+ * 
+ * @copyright Copyright (c) 2026 OpenWCH Team
+ * 
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <openwch_platform.h>
 #include "board.h"
 #include "version.h"

@@ -1,0 +1,257 @@
+config BLE_SUPPORT
+    bool "Enable BLE (Bluetooth Low Energy) support"
+    default n
+    help
+        Enable Bluetooth Low Energy support for CH58x series.
+
+if BLE_SUPPORT
+
+config BLE_PERIPHERAL_ONLY
+    bool "Use peripheral-only BLE library"
+    default n
+    help
+        Use the smaller peripheral-only BLE library (libCH58xBLE_PERI.a)
+        instead of the full BLE library (libCH58xBLE.a).
+        This reduces code size if only peripheral role is needed.
+
+menu "BLE MAC Address"
+
+config BLE_MAC
+    bool "Use custom MAC address"
+    default n
+    help
+        Use custom Bluetooth MAC address instead of chip default MAC.
+        You need to define MacAddr[] in your application code.
+
+endmenu
+
+menu "Power Management"
+
+config DCDC_ENABLE
+    bool "Enable DC-DC converter"
+    default n
+    help
+        Enable the DC-DC power converter for better power efficiency.
+
+config HAL_SLEEP
+    bool "Enable sleep mode"
+    default n
+    help
+        Enable sleep functionality to reduce power consumption.
+
+if HAL_SLEEP
+
+config SLEEP_RTC_MIN_TIME
+    int "Minimum sleep time (RTC ticks)"
+    default 1000
+    help
+        Minimum sleep time in RTC ticks for non-idle sleep mode.
+
+config SLEEP_RTC_MAX_TIME
+    int "Maximum sleep time (RTC ticks)"
+    default 30000000
+    help
+        Maximum sleep time in RTC ticks for non-idle sleep mode.
+
+config WAKE_UP_RTC_MAX_TIME
+    int "Wake-up stabilization time (RTC ticks)"
+    default 1600
+    help
+        Time to wait for 32MHz crystal stabilization after wake-up.
+        Sleep/Power-down mode: 45, Pause mode: 45, Idle mode: 5
+
+endif # HAL_SLEEP
+
+endmenu
+
+menu "BLE Calibration"
+
+config TEM_SAMPLE
+    bool "Enable temperature calibration"
+    default y
+    help
+        Enable calibration based on temperature changes.
+        Single calibration takes less than 10ms.
+
+config BLE_CALIBRATION_ENABLE
+    bool "Enable periodic calibration"
+    default y
+    help
+        Enable periodic BLE calibration.
+        Single calibration takes less than 10ms.
+
+config BLE_CALIBRATION_PERIOD
+    int "Calibration period (ms)"
+    default 120000
+    depends on BLE_CALIBRATION_ENABLE
+    help
+        Period between automatic calibrations in milliseconds.
+
+endmenu
+
+menu "BLE SNV (Simple NV Storage)"
+
+config BLE_SNV
+    bool "Enable SNV for bonding info"
+    default y
+    help
+        Enable Simple NV Storage for storing bonding information.
+
+config BLE_SNV_ADDR
+    hex "SNV storage address"
+    default 0x77000
+    depends on BLE_SNV
+    help
+        Flash address for SNV storage (will subtract FLASH_ROM_MAX_SIZE).
+
+config BLE_SNV_BLOCK
+    int "SNV block size"
+    default 256
+    depends on BLE_SNV
+    help
+        Size of each SNV block in bytes.
+
+config BLE_SNV_NUM
+    int "Number of SNV blocks"
+    default 1
+    depends on BLE_SNV
+    help
+        Number of SNV blocks to allocate.
+
+endmenu
+
+menu "Clock Configuration"
+
+choice CLK_OSC32K
+    prompt "RTC clock source"
+    default CLK_OSC32K_INTERNAL_32000
+    help
+        Select RTC clock source. External 32K must be used for central role.
+
+config CLK_OSC32K_EXTERNAL
+    bool "External 32.768 KHz crystal"
+
+config CLK_OSC32K_INTERNAL_32000
+    bool "Internal 32.000 KHz RC"
+
+config CLK_OSC32K_INTERNAL_32768
+    bool "Internal 32.768 KHz RC"
+
+endchoice
+
+config CLK_OSC32K
+    int
+    default 0 if CLK_OSC32K_EXTERNAL
+    default 1 if CLK_OSC32K_INTERNAL_32000
+    default 2 if CLK_OSC32K_INTERNAL_32768
+
+endmenu
+
+menu "BLE Memory Configuration"
+
+config BLE_MEMHEAP_SIZE
+    int "BLE stack heap size (bytes)"
+    default 6144
+    help
+        RAM size used by BLE protocol stack, minimum 6KB.
+
+config BLE_BUFF_MAX_LEN
+    int "Maximum packet length"
+    default 27
+    range 27 516
+    help
+        Maximum packet length for a single connection.
+        Default 27 bytes (ATT_MTU=23).
+
+config BLE_BUFF_NUM
+    int "Buffer packet count"
+    default 5
+    help
+        Number of packets buffered by the controller.
+
+config BLE_TX_NUM_EVENT
+    int "Max TX packets per connection event"
+    default 1
+    help
+        Maximum number of packets that can be sent in a single connection event.
+
+endmenu
+
+menu "BLE Radio Configuration"
+
+choice BLE_TX_POWER
+    prompt "TX power level"
+    default BLE_TX_POWER_0_DBM
+    help
+        BLE transmission power level.
+
+config BLE_TX_POWER_N12_DBM
+    bool "-12 dBm"
+
+config BLE_TX_POWER_N9_DBM
+    bool "-9 dBm"
+
+config BLE_TX_POWER_N6_DBM
+    bool "-6 dBm"
+
+config BLE_TX_POWER_N3_DBM
+    bool "-3 dBm"
+
+config BLE_TX_POWER_0_DBM
+    bool "0 dBm"
+
+config BLE_TX_POWER_3_DBM
+    bool "+3 dBm"
+
+config BLE_TX_POWER_6_DBM
+    bool "+6 dBm"
+
+endchoice
+
+config BLE_TX_POWER
+    int
+    default 0 if BLE_TX_POWER_N12_DBM
+    default 1 if BLE_TX_POWER_N9_DBM
+    default 2 if BLE_TX_POWER_N6_DBM
+    default 3 if BLE_TX_POWER_N3_DBM
+    default 4 if BLE_TX_POWER_0_DBM
+    default 5 if BLE_TX_POWER_3_DBM
+    default 6 if BLE_TX_POWER_6_DBM
+
+endmenu
+
+menu "BLE Multi-Connection"
+
+config PERIPHERAL_MAX_CONNECTION
+    int "Maximum peripheral connections"
+    default 1
+    range 0 4
+    help
+        Maximum number of simultaneous peripheral (slave) role connections.
+
+config CENTRAL_MAX_CONNECTION
+    int "Maximum central connections"
+    default 3
+    range 0 4
+    help
+        Maximum number of simultaneous central (master) role connections.
+
+endmenu
+
+menu "HAL Features"
+
+config HAL_KEY
+    bool "Enable key (button) support"
+    default n
+    help
+        Enable HAL support for hardware keys/buttons.
+
+config HAL_LED
+    bool "Enable LED support"
+    default n
+    help
+        Enable HAL support for LEDs.
+
+endmenu
+
+endif # BLE_SUPPORT
