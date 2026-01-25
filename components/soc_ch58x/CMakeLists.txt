@@ -1,4 +1,4 @@
-add_library(openwch_platform INTERFACE)
+add_library(openwch_platform STATIC)
 
 set(CH58X_LD_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/ld/ch585_default.ld" CACHE FILEPATH "Linker script for CH58x")
 if(DEFINED CONFIG_CH58X_RAM_SIZE_KB)
@@ -8,13 +8,13 @@ else()
     set(CH58X_RAM_SIZE "131072")
 endif()
 
-target_include_directories(openwch_platform INTERFACE
+target_include_directories(openwch_platform PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include
     ${CMAKE_CURRENT_LIST_DIR}/rvmsis
     ${CMAKE_CURRENT_LIST_DIR}/startup
 )
 
-target_sources(openwch_platform INTERFACE
+target_sources(openwch_platform PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/startup/startup_CH585.S
     ${CMAKE_CURRENT_LIST_DIR}/drivers/CH58x_sys.c
     ${CMAKE_CURRENT_LIST_DIR}/drivers/CH58x_clk.c
@@ -63,13 +63,12 @@ openwch_add_sources_if(CONFIG_SOC_CH58X_USB
     ${CMAKE_CURRENT_LIST_DIR}/drivers/CH58x_usbhostClass.c
 )
 
-target_compile_options(openwch_platform INTERFACE
+target_compile_options(openwch_platform PUBLIC
     -march=rv32imac -mabi=ilp32 -mcmodel=medlow
 )
 
-target_link_libraries(openwch_platform INTERFACE
+target_link_libraries(openwch_platform PUBLIC
     openwch_config
-    openwch_board
     ${CMAKE_CURRENT_LIST_DIR}/drivers/libISP585.a
 )
 
@@ -78,20 +77,24 @@ add_subdirectory(libble)
 
 # Auto-link BLE library when BLE support is enabled via Kconfig
 if(CONFIG_BLE_SUPPORT)
-    target_link_libraries(openwch_platform INTERFACE openwch_ble)
+    target_link_libraries(openwch_platform PUBLIC
+        -Wl,--whole-archive
+        openwch_ble
+        -Wl,--no-whole-archive
+    )
 endif()
 
 # Auto-link wch_log when any log backend is enabled via Kconfig.
 if(CONFIG_WCH_LOG_UART OR CONFIG_WCH_LOG_RTT OR CONFIG_WCH_LOG_CDC)
-    target_link_libraries(openwch_platform INTERFACE wch_log)
+    target_link_libraries(openwch_platform PUBLIC wch_log)
 endif()
 
 # Auto-link FreeRTOS kernel when enabled via Kconfig
 if(CONFIG_FREERTOS_ENABLE)
-    target_link_libraries(openwch_platform INTERFACE freertos_kernel)
+    target_link_libraries(openwch_platform PUBLIC freertos_kernel)
 endif()
 
-target_link_options(openwch_platform INTERFACE
+target_link_options(openwch_platform PUBLIC
     -T${CH58X_LD_SCRIPT}
     -Wl,--defsym=RAM_SIZE=${CH58X_RAM_SIZE}
 )

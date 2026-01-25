@@ -13,7 +13,7 @@ endif()
 
 function(openwch_add_sources_if config)
     if(${config})
-        target_sources(openwch_platform INTERFACE ${ARGN})
+        target_sources(openwch_platform PRIVATE ${ARGN})
     endif()
 endfunction()
 
@@ -135,12 +135,17 @@ function(openwch_add_source target)
     )
 
     target_link_libraries(${target}
-        openwch_platform
         ${OW_LINK_LIBS}
+        openwch_board
+        openwch_platform
     )
 
     if(OW_DEFINES)
         target_compile_definitions(${target} PRIVATE ${OW_DEFINES})
+    endif()
+
+    if(CONFIG_BLE_SUPPORT AND TARGET openwch_ble_handlers)
+        target_sources(${target} PRIVATE $<TARGET_OBJECTS:openwch_ble_handlers>)
     endif()
 
     target_link_options(${target} PRIVATE

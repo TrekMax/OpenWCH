@@ -1,19 +1,22 @@
-# CH58x BLE Library
-add_library(openwch_ble INTERFACE)
-
-target_include_directories(openwch_ble INTERFACE
-    ${CMAKE_CURRENT_LIST_DIR}
-)
-
-# Link the pre-compiled BLE library with whole-archive to ensure all symbols are included
+# CH58x BLE Library (prebuilt)
 if(CONFIG_BLE_PERIPHERAL_ONLY)
     set(BLE_LIB_PATH "${CMAKE_CURRENT_LIST_DIR}/libCH58xBLE_PERI.a")
 else()
     set(BLE_LIB_PATH "${CMAKE_CURRENT_LIST_DIR}/libCH58xBLE.a")
 endif()
+add_library(openwch_ble STATIC IMPORTED GLOBAL)
+set_target_properties(openwch_ble PROPERTIES
+    IMPORTED_LOCATION "${BLE_LIB_PATH}"
+)
 
-target_link_libraries(openwch_ble INTERFACE
-    -Wl,--whole-archive
-    ${BLE_LIB_PATH}
-    -Wl,--no-whole-archive
+target_include_directories(openwch_ble INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}
+)
+
+# BLE IRQ handlers (must be linked directly to override weak vectors)
+add_library(openwch_ble_handlers OBJECT
+    ${CMAKE_CURRENT_LIST_DIR}/ble_task_scheduler.S
+)
+target_include_directories(openwch_ble_handlers PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}
 )
