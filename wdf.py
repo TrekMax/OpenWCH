@@ -148,21 +148,34 @@ def do_menuconfig(args: argparse.Namespace) -> None:
     os.environ["KCONFIG_CONFIG"] = str(config_path)
     kconf = Kconfig(str(kconfig))
 
-    if config_path.exists():
-        kconf.load_config(str(config_path))
-    else:
-        kconf.load_config()
+    prj_conf = example_dir / "prj.conf"
+    kconf.load_config()
+    refresh_from_prj = False
+    if prj_conf.exists():
+        if not config_path.exists():
+            refresh_from_prj = True
+        else:
+            try:
+                refresh_from_prj = prj_conf.stat().st_mtime > config_path.stat().st_mtime
+            except OSError:
+                refresh_from_prj = True
+
+    if refresh_from_prj:
+        kconf.load_config(str(prj_conf), replace=False)
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        kconf.write_config(str(config_path))
+    elif config_path.exists():
+        kconf.load_config(str(config_path), replace=True)
 
     import tempfile
 
-    with tempfile.NamedTemporaryFile("w+", delete=False, encoding="utf-8") as tmp:
-        before_path = Path(tmp.name)
-    kconf.write_config(str(before_path))
-    before_text = before_path.read_text(encoding="utf-8", errors="ignore")
-    before_path.unlink(missing_ok=True)
+    build_dir.mkdir(parents=True, exist_ok=True)
+    if not config_path.exists():
+        kconf.write_config(str(config_path))
+
+    before_text = config_path.read_text(encoding="utf-8", errors="ignore")
 
     try:
-        build_dir.mkdir(parents=True, exist_ok=True)
         old_cwd = Path.cwd()
         os.chdir(build_dir)
         try:
@@ -175,7 +188,7 @@ def do_menuconfig(args: argparse.Namespace) -> None:
         finally:
             os.chdir(old_cwd)
     except KeyboardInterrupt:
-        print("[wdf] menuconfig interrupted; not writing prj.conf")
+        print("[wdf] menuconfig interrupted; not writing config")
         return
 
     config_path.parent.mkdir(parents=True, exist_ok=True)
@@ -186,7 +199,7 @@ def do_menuconfig(args: argparse.Namespace) -> None:
     tmp_path.unlink(missing_ok=True)
 
     if new_text == before_text:
-        print("[wdf] Config unchanged; not writing prj.conf")
+        print("[wdf] Config unchanged; not writing config")
         return
 
     config_path.write_text(new_text, encoding="utf-8")
