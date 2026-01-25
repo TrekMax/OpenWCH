@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(ble_peripheral C CXX ASM)
+project(ble_central C CXX ASM)
 
 set(OPENWCH_SDK_PATH "$ENV{OPENWCH_SDK_PATH}" CACHE PATH "Path to OpenWCH SDK root")
 if(NOT OPENWCH_SDK_PATH)
@@ -8,15 +8,13 @@ endif()
 
 include(${OPENWCH_SDK_PATH}/cmake/openwch_sdk.cmake)
 
-openwch_add_source(ble_peripheral
+openwch_add_source(ble_central
     SOURCES
         main.c
-        app/peripheral.c
-        profile/devinfoservice.c
-        profile/gattprofile.c
+        app/central.c
 )
 
-target_include_directories(ble_peripheral PRIVATE
+target_include_directories(ble_central PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/app/
     ${CMAKE_CURRENT_SOURCE_DIR}/profile/
