@@ -1,4 +1,5 @@
 menu "SoC Configuration"
+    depends on SOC_CH59X
 
 menu "CH59X SoC drivers"
 
@@ -47,11 +48,9 @@ menu "CH59X SoC drivers"
         default n
         depends on SOC_CH59X
 
+endmenu
+
 rsource "libble/Kconfig"
-
-endmenu
-
-endmenu
 
 menu "Debug Configuration"
 
@@ -79,5 +78,7 @@ config DEBUG_UART_PORT
     default 2 if DEBUG_UART1
     help
       Debug UART port number (0=none, 1=UART0, 2=UART1)
+
+endmenu
 
 endmenu

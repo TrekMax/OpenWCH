@@ -1,22 +1,35 @@
-config SOC_CH58X
-    bool "Target SoC: CH58x"
-    default n
+choice SOC_CHOICE
+    prompt "Target SoC"
+    default SOC_CH58X
 
-config BOARD_CH58X_EVB
-    bool "Board: CH58x EVB"
-    default n
-    depends on SOC_CH58X
+config SOC_CH58X
+    bool "CH58x"
 
 config SOC_CH59X
-    bool "Target SoC: CH59x"
-    default n
+    bool "CH59x"
+
+endchoice
+
+choice BOARD_CHOICE
+    prompt "Target Board"
+    default BOARD_CH58X_EVB
+
+config BOARD_CH58X_EVB
+    bool "CH58x EVB"
+    depends on SOC_CH58X
 
 config BOARD_CH59X_EVB
-    bool "Board: CH59x EVB"
-    default n
+    bool "CH59x EVB"
     depends on SOC_CH59X
+
+endchoice
 
 rsource "soc_ch58x/Kconfig"
 rsource "soc_ch59x/Kconfig"
+
+menu "Component Configuration"
+
 rsource "wch_log/Kconfig"
 rsource "rtos/Kconfig"
+
+endmenu

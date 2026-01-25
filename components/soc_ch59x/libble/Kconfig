@@ -2,7 +2,7 @@ config BLE_SUPPORT
     bool "Enable BLE (Bluetooth Low Energy) support"
     default n
     help
-        Enable Bluetooth Low Energy support for CH58x series.
+        Enable Bluetooth Low Energy support for CH59x series.
 
 if BLE_SUPPORT
 
@@ -10,8 +10,8 @@ config BLE_PERIPHERAL_ONLY
     bool "Use peripheral-only BLE library"
     default n
     help
-        Use the smaller peripheral-only BLE library (libCH58xBLE_PERI.a)
-        instead of the full BLE library (libCH58xBLE.a).
+        Use the smaller peripheral-only BLE library (libCH59xBLE_PERI.a)
+        instead of the full BLE library (libCH59xBLE.a).
         This reduces code size if only peripheral role is needed.
 
 menu "BLE MAC Address"

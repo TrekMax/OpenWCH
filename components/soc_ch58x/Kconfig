@@ -1,13 +1,7 @@
 menu "SoC Configuration"
-
+    depends on SOC_CH58X
 
 menu "CH58x SoC drivers"
-
-    config CH58X_RAM_SIZE_KB
-        int "CH58x RAM size (KB)"
-        default 128
-        range 96 128
-        depends on SOC_CH58X
 
     config SOC_CH58X_UART
         bool "Enable CH58x UART driver"
@@ -54,11 +48,26 @@ menu "CH58x SoC drivers"
         default n
         depends on SOC_CH58X
 
+endmenu
+
+menu "Flash and SRAM Configuration"
+
+    config CH58X_FLASH_SIZE_KB
+        int "Flash Size (KB)"
+        default 448
+        help
+          Set the size of the flash memory in kilobytes.
+
+    config CH58X_RAM_SIZE_KB
+        int "CH58x RAM size (KB)"
+        default 128
+        range 96 128
+        help
+          Set the size of the RAM memory in kilobytes.
+
+endmenu
+
 rsource "libble/Kconfig"
-
-endmenu
-
-endmenu
 
 menu "Debug Configuration"
 
@@ -86,5 +95,7 @@ config DEBUG_UART_PORT
     default 2 if DEBUG_UART1
     help
       Debug UART port number (0=none, 1=UART0, 2=UART1)
+
+endmenu
 
 endmenu
