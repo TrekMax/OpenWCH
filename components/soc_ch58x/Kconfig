@@ -1,6 +1,13 @@
 menu "SoC Configuration"
 
+
 menu "CH58x SoC drivers"
+
+    config CH58X_RAM_SIZE_KB
+        int "CH58x RAM size (KB)"
+        default 128
+        range 96 128
+        depends on SOC_CH58X
 
     config SOC_CH58X_UART
         bool "Enable CH58x UART driver"

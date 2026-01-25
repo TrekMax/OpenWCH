@@ -1,6 +1,12 @@
 add_library(openwch_platform INTERFACE)
 
 set(CH58X_LD_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/ld/ch585_default.ld" CACHE FILEPATH "Linker script for CH58x")
+if(DEFINED CONFIG_CH58X_RAM_SIZE_KB)
+    math(EXPR _ch58x_ram_bytes "${CONFIG_CH58X_RAM_SIZE_KB} * 1024")
+    set(CH58X_RAM_SIZE "${_ch58x_ram_bytes}")
+else()
+    set(CH58X_RAM_SIZE "131072")
+endif()
 
 target_include_directories(openwch_platform INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/include
@@ -87,4 +93,5 @@ endif()
 
 target_link_options(openwch_platform INTERFACE
     -T${CH58X_LD_SCRIPT}
+    -Wl,--defsym=RAM_SIZE=${CH58X_RAM_SIZE}
 )
