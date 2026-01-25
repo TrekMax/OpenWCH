@@ -13,10 +13,10 @@ endif()
 
 # Provide board headers and sources.
 target_include_directories(openwch_board INTERFACE
-    ${OPENWCH_BOARD_DIR}
-    ${OPENWCH_BOARD_DIR}/hal/include
-    ${OPENWCH_SOC_DIR}/include
-    ${OPENWCH_SOC_DIR}/rvmsis
+    ${OPENWCH_BOARD_DIR}/
+    ${OPENWCH_BOARD_DIR}/hal/include/
+    ${OPENWCH_SOC_DIR}/include/
+    ${OPENWCH_SOC_DIR}/rvmsis/
 )
 
 target_sources(openwch_board INTERFACE

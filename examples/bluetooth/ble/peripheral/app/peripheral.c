@@ -85,7 +85,15 @@
 static uint8_t Peripheral_TaskID = INVALID_TASK_ID; // Task ID for internal task/event processing
 
 // Device Name
-#define DEVICE_NAME     "CH585 Peripheral"
+#if CONFIG_SOC_CH59X
+    #define DEVICE_NAME     "CH59X Peripheral"
+#endif
+
+#if CONFIG_SOC_CH58X
+    #define DEVICE_NAME     "CH58X Peripheral"
+#endif
+
+
 #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
 
 // Connection interval range data
@@ -119,7 +127,7 @@ static uint8_t scanRspData[31];
 static uint8_t advertData[31];
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Simple Peripheral";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = DEVICE_NAME;
 
 // Connection item list
 static peripheralConnItem_t peripheralConnList;

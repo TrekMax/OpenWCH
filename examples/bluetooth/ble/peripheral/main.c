@@ -74,6 +74,13 @@ int main(void)
 #if CONFIG_SOC_CH58X
     CH58x_BLEInit();
 #endif
+
+    uint8_t MacAddr[6];
+    GetMACAddress(MacAddr);
+    // WCH_LOG_HEXDUMP("MAC Address", MacAddr, sizeof(MacAddr));
+    WCH_LOGI("BLE MAC Address: %02X:%02X:%02X:%02X:%02X:%02X",
+                MacAddr[5], MacAddr[4], MacAddr[3],
+                MacAddr[2], MacAddr[1], MacAddr[0]);
     WCH_LOGI("BLE Init OK");
 
     HAL_Init();

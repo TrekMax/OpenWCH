@@ -92,7 +92,6 @@
 void wch_log_hexdump(const char *tag, uint8_t *buf, uint32_t length);
 
 #define WCH_LOG_HEXDUMP(tag, buf, length) wch_log_hexdump(tag, buf, length)
-#define WCH_LOG_HEX_DUMP(tag, buf, length) WCH_LOG_HEXDUMP(tag, buf, length)
 
 
 #endif /* __WCH_LOG_H__ */
