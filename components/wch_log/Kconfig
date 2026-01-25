@@ -16,11 +16,30 @@ config WCH_LOG_COLORS
     bool "Enable ANSI log colors"
     default y
 
-config WCH_LOG_LEVEL
-    int "Log level"
-    range 0 5
-    default 4
+choice WCH_LOG_LEVEL_CHOICE
+    prompt "Log level"
+    default WCH_LOG_LEVEL_DEBUG
     help
-      0=None, 1=Error, 2=Warn, 3=Info, 4=Debug, 5=Verbose
+      Select log level
+
+config WCH_LOG_LEVEL_NONE
+    bool "None"
+
+config WCH_LOG_LEVEL_ERROR
+    bool "Error"
+
+config WCH_LOG_LEVEL_WARN
+    bool "Warn"
+
+config WCH_LOG_LEVEL_INFO
+    bool "Info"
+
+config WCH_LOG_LEVEL_DEBUG
+    bool "Debug"
+
+config WCH_LOG_LEVEL_VERBOSE
+    bool "Verbose"
+
+endchoice
 
 endmenu

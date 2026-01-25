@@ -21,7 +21,7 @@ endfunction()
 # 参数:
 # + target_name 目标
 macro(openwch_generate_debug_files target_name)
-    set(_debug_script "${CMAKE_CURRENT_BINARY_DIR}/listenai_debug_${target_name}.cmake")
+    set(_debug_script "${CMAKE_CURRENT_BINARY_DIR}/openwch_debug_${target_name}.cmake")
     file(GENERATE OUTPUT "${_debug_script}" CONTENT "file(MAKE_DIRECTORY \"$<TARGET_FILE_DIR:${target_name}>\")\nexecute_process(COMMAND \"${CMAKE_OBJDUMP}\" -d -S \"$<TARGET_FILE:${target_name}>\" OUTPUT_FILE \"$<TARGET_FILE_DIR:${target_name}>/${target_name}.lst\")\nexecute_process(COMMAND \"${CMAKE_READELF}\" -a \"$<TARGET_FILE:${target_name}>\" OUTPUT_FILE \"$<TARGET_FILE_DIR:${target_name}>/${target_name}.relf\")\nexecute_process(COMMAND \"${CMAKE_NM}\" -CSsnl -f sysv \"$<TARGET_FILE:${target_name}>\" OUTPUT_FILE \"$<TARGET_FILE_DIR:${target_name}>/${target_name}.symb\")\n")
     add_custom_command(
         TARGET ${target_name} POST_BUILD
