@@ -1,3 +1,21 @@
+if(CONFIG_BOARD_CUSTOM)
+    if(NOT TARGET openwch_board)
+        add_library(openwch_board STATIC)
+    endif()
+
+    # User project should configure sources/include dirs for openwch_board.
+    if(CONFIG_BLE_SUPPORT)
+        target_link_libraries(openwch_board PUBLIC openwch_config openwch_ble wch_log)
+    else()
+        target_link_libraries(openwch_board PUBLIC openwch_config wch_log)
+    endif()
+    return()
+endif()
+
+if(TARGET openwch_board)
+    message(FATAL_ERROR "openwch_board target already defined; enable CONFIG_BOARD_CUSTOM to use a project-defined board")
+endif()
+
 add_library(openwch_board STATIC)
 
 # Select board by Kconfig
@@ -11,28 +29,4 @@ else()
     message(FATAL_ERROR "No board selected: enable CONFIG_BOARD_CH58X_EVB or CONFIG_BOARD_CH59X_EVB in Kconfig")
 endif()
 
-# Provide board headers and sources.
-target_include_directories(openwch_board PUBLIC
-    ${OPENWCH_BOARD_DIR}/
-    ${OPENWCH_BOARD_DIR}/hal/include/
-    ${OPENWCH_SOC_DIR}/include/
-    ${OPENWCH_SOC_DIR}/rvmsis/
-)
-
-target_sources(openwch_board PRIVATE
-    ${OPENWCH_BOARD_DIR}/board.c
-)
-
-# HAL sources are only needed when BLE support is enabled
-if(CONFIG_BLE_SUPPORT)
-    target_sources(openwch_board PRIVATE
-        ${OPENWCH_BOARD_DIR}/hal/mcu.c
-        ${OPENWCH_BOARD_DIR}/hal/led.c
-        ${OPENWCH_BOARD_DIR}/hal/key.c
-        ${OPENWCH_BOARD_DIR}/hal/rtc.c
-        ${OPENWCH_BOARD_DIR}/hal/sleep.c
-    )
-    target_link_libraries(openwch_board PUBLIC openwch_config openwch_ble wch_log)
-else()
-    target_link_libraries(openwch_board PUBLIC openwch_config wch_log)
-endif()
+include(${OPENWCH_BOARD_DIR}/board.cmake)

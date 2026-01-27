@@ -1,0 +1,11 @@
+menu "Custom Board Options"
+
+config CUSTOM_BOARD_HAS_LED
+	bool "Custom board has LED"
+	default y
+
+config CUSTOM_BOARD_HAS_KEY
+	bool "Custom board has key"
+	default y
+
+endmenu

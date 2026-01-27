@@ -29,7 +29,23 @@ def copy_compile_commands(build_dir: Path, sdk_root: Path) -> None:
     dst.write_bytes(src.read_bytes())
 
 
-def generate_kconfig(sdk_root: Path, build_dir: Path, prj_conf: Path | None) -> Path:
+def _ensure_project_kconfig(example_dir: Path, build_dir: Path) -> Path:
+    candidate = example_dir / "kconfig"
+    if candidate.exists():
+        return candidate
+    build_dir.mkdir(parents=True, exist_ok=True)
+    empty_kconfig = build_dir / "kconfig.empty"
+    if not empty_kconfig.exists():
+        empty_kconfig.write_text("# empty project Kconfig\n", encoding="utf-8")
+    return empty_kconfig
+
+
+def generate_kconfig(
+    sdk_root: Path,
+    build_dir: Path,
+    prj_conf: Path | None,
+    project_kconfig: Path,
+) -> Path:
     try:
         from kconfiglib import Kconfig  # type: ignore
     except Exception as exc:
@@ -42,6 +58,7 @@ def generate_kconfig(sdk_root: Path, build_dir: Path, prj_conf: Path | None) -> 
         raise SystemExit(f"Kconfig not found: {kconfig}")
 
     os.environ.setdefault("srctree", str(sdk_root))
+    os.environ["OPENWCH_PROJECT_KCONFIG"] = str(project_kconfig)
     kconf = Kconfig(str(kconfig))
 
     # Load defaults first, then overlay prj.conf if present.
@@ -77,7 +94,13 @@ def do_build(args: argparse.Namespace) -> None:
         prj_conf = Path(args.config).expanduser().resolve()
     else:
         prj_conf = example_dir / "prj.conf"
-    out_config = generate_kconfig(sdk_root, build_dir, prj_conf if prj_conf.exists() else None)
+    project_kconfig = _ensure_project_kconfig(example_dir, build_dir)
+    out_config = generate_kconfig(
+        sdk_root,
+        build_dir,
+        prj_conf if prj_conf.exists() else None,
+        project_kconfig,
+    )
 
     configure_cmd = [
         args.cmake,
@@ -145,6 +168,8 @@ def do_menuconfig(args: argparse.Namespace) -> None:
         raise SystemExit(f"Kconfig not found: {kconfig}")
 
     os.environ.setdefault("srctree", str(sdk_root))
+    project_kconfig = _ensure_project_kconfig(example_dir, build_dir)
+    os.environ["OPENWCH_PROJECT_KCONFIG"] = str(project_kconfig)
     os.environ["KCONFIG_CONFIG"] = str(config_path)
     kconf = Kconfig(str(kconfig))
 

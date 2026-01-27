@@ -21,3 +21,6 @@ config OPENWCH_GEN_DEBUG_FILES
 endmenu
 
 source "components/Kconfig"
+
+# Optional project-level Kconfig (set by build helper).
+rsource "$OPENWCH_PROJECT_KCONFIG"

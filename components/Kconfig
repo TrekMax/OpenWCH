@@ -22,6 +22,10 @@ config BOARD_CH59X_EVB
     bool "CH59x EVB"
     depends on SOC_CH59X
 
+config BOARD_CUSTOM
+    bool "Custom board (defined by project)"
+    depends on SOC_CH58X || SOC_CH59X
+
 endchoice
 
 rsource "soc_ch58x/Kconfig"
