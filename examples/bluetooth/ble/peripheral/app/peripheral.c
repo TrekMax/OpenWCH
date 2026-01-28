@@ -223,7 +223,7 @@ void Peripheral_Init()
         GAP_SetParamValue(TGAP_DISC_ADV_INT_MAX, advInt);
 
         // Enable scan req notify
-        GAP_SetParamValue(TGAP_ADV_SCAN_REQ_NOTIFY, TRUE);
+        GAP_SetParamValue(TGAP_ADV_SCAN_REQ_NOTIFY, ENABLE);
     }
 
     // Setup the GAP Bond Manager

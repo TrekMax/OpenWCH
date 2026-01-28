@@ -21,6 +21,10 @@
 #include "board.h"
 #include "wch_log.h"
 
+#if CONFIG_CUSTOM_BOARD_HAS_RF_PA
+blePaControlConfig_t  blePaControlConfigIO; //必须是全局变量
+#endif
+
 /*********************************************************************
  * GLOBAL TYPEDEFS
  */
@@ -92,6 +96,22 @@ int main(void)
     Peripheral_Init();
     WCH_LOGI("Peripheral Init OK, entering main loop");
 
+#if CONFIG_CUSTOM_BOARD_HAS_RF_PA
+    WCH_LOGI("Custom Board RF PA Control Init");
+    // PA控制IO初始化(GPIOB4作为RX使能，GPIOB5作为TX使能)
+
+    GPIOB_ModeCfg(GPIO_Pin_4|GPIO_Pin_5, GPIO_ModeOut_PP_5mA) ;//设置对应的 GPIO 为对应的拉高拉低寄存器 //对应的 Pin 是 bit
+    
+    blePaControlConfigIO.txEnableGPIO = (uint32_t)&R32_PB_OUT;
+    blePaControlConfigIO.txDisableGPIO = (uint32_t)&R32_PB_CLR;
+    blePaControlConfigIO.tx_pin = GPIO_Pin_5;
+
+    blePaControlConfigIO.rxEnableGPIO = (uint32_t)&R32_PB_OUT;
+    blePaControlConfigIO.rxDisableGPIO = (uint32_t)&R32_PB_CLR;
+    blePaControlConfigIO.rx_pin = GPIO_Pin_4;
+    
+    BLE_PAControlInit(&blePaControlConfigIO);
+#endif
     Main_Circulation();
     return 0;
 }

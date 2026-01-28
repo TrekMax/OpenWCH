@@ -60,10 +60,6 @@
 #define WCH_LOG_LEVEL WCH_LOG_LEVEL_DEBUG
 #endif
 
-#ifndef CONFIG_WCH_LOG_COLORS
-#define CONFIG_WCH_LOG_COLORS 1
-#endif
-
 /* clang-format off */
 #if CONFIG_WCH_LOG_COLORS
 #define LOG_COLOR_BLACK   "30"
@@ -95,8 +91,8 @@
 #define WCH_LOGE(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_ERROR)  { WCH_LOG(LOG_COLOR_E "ERR:"fmt,##__VA_ARGS__);}} while(0)
 #define WCH_LOGW(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_WARN)   { WCH_LOG(LOG_COLOR_W "WRN:"fmt,##__VA_ARGS__);}} while(0)
 #define WCH_LOGI(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_INFO)   { WCH_LOG(LOG_COLOR_I "INF:"fmt,##__VA_ARGS__);}} while(0)
-#define WCH_LOGD(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_DEBUG)  { WCH_LOG("DBG:"fmt,##__VA_ARGS__);}} while(0)
-#define WCH_LOGV(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_VERBOSE){ WCH_LOG("VBS:"fmt,##__VA_ARGS__);}} while(0)
+#define WCH_LOGD(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_DEBUG)  { WCH_LOG(LOG_COLOR_D "DBG:"fmt,##__VA_ARGS__);}} while(0)
+#define WCH_LOGV(fmt, ...)     do {if (WCH_LOG_LEVEL >= WCH_LOG_LEVEL_VERBOSE){ WCH_LOG(LOG_COLOR_V "VBS:"fmt,##__VA_ARGS__);}} while(0)
 
 void wch_log_hexdump(const char *tag, uint8_t *buf, uint32_t length);
 

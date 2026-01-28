@@ -1,0 +1,7 @@
+menu "Custom Board Options"
+
+config CUSTOM_BOARD_HAS_RF_PA
+	bool "Custom board has RF PA"
+	default n
+
+endmenu
